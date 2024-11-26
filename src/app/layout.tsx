@@ -14,9 +14,9 @@ const geistMono = localFont({
 });
 
 const interRegular = localFont({
-  src: './fonts/Inter-Regular.woff', // Make sure the path is correct
+  src: './fonts/Inter-Regular.woff',
   variable: '--font-inter-regular',
-  weight: '400', // Regular weight
+  weight: '400',
 });
 
 export const metadata: Metadata = {
