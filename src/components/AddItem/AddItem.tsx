@@ -22,28 +22,43 @@ type FormData = z.infer<typeof schema>;
 type MenuItem = FormData & { id: string };
 
 const AddItem = () => {
-  const [searchValue, setSearchValue] = useState('');
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      name: '',
+      link: '',
+    },
   });
 
   const handleRemove = () => {
     console.log('remove');
   };
 
+  const handleReset = () => {
+    reset({
+      name: '',
+      link: '',
+    });
+  };
+
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log('Form Data:', data);
     const newItem: MenuItem = {
       ...data,
       id: uuidv4(),
     };
     setMenuItems((prevItems) => [...prevItems, newItem]);
+
+    reset({
+      name: '',
+      link: '',
+    });
   };
 
   return (
@@ -77,11 +92,7 @@ const AddItem = () => {
             >
               Link
             </label>
-            <SearchInput
-              value={searchValue}
-              onChange={setSearchValue}
-              register={register('link')}
-            />
+            <SearchInput register={register('link')} />
             {errors.link && (
               <span className="text-red-500 text-sm">
                 {errors.link.message}
@@ -89,7 +100,7 @@ const AddItem = () => {
             )}
           </div>
           <div className="flex my-5 gap-2">
-            <Button onClick={() => console.log('Form Canceled')}>Anuluj</Button>
+            <Button onClick={handleReset}>Anuluj</Button>
             <Button variant="cta" type="submit">
               Dodaj
             </Button>
