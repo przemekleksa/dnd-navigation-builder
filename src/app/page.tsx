@@ -3,24 +3,26 @@
 import AddItem from '@/components/AddItem/AddItem';
 import EmptyList from '@/components/EmptyList/EmptyList';
 import ItemList from '@/components/ItemList/ItemList';
-import { MenuItem } from '@/types/MenuItem';
-import { getDataFromLocalStorage } from '@/utils/ManipulateLocalStorage';
-import { useEffect, useState } from 'react';
+import { useMenu } from '@/context/menuContext';
+import { useState } from 'react';
 
 export default function Home() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  useEffect(() => {
-    const itemsData = getDataFromLocalStorage();
-    if (itemsData) {
-      setMenuItems(JSON.parse(itemsData));
-    }
-  }, []);
+  const { menuItems } = useMenu();
+  const [showAddItem, setShowAddItem] = useState<boolean>(
+    menuItems.length > 0 ? true : false
+  );
+
+  const addItem = () => {
+    setShowAddItem(true);
+  };
 
   return (
     <div>
-      <EmptyList />
-      <AddItem setMenuItems={setMenuItems} />
-      <ItemList menuItems={menuItems} setMenuItems={setMenuItems} />
+      {!showAddItem && menuItems.length === 0 && (
+        <EmptyList addItem={addItem} />
+      )}
+      {showAddItem && menuItems.length < 1 && <AddItem />}
+      <ItemList />
     </div>
   );
 }

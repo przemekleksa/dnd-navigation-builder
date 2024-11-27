@@ -1,30 +1,57 @@
-import { MenuItem } from '@/types/MenuItem';
-import { saveDataToLocalStorage } from '@/utils/ManipulateLocalStorage';
+import { useMenu } from '@/context/menuContext';
+import { useState } from 'react';
+import AddItem from '../AddItem/AddItem';
+import Button from '../Button/Button';
 import Item from '../Item/Item';
 
-type Props = {
-  menuItems: MenuItem[];
-  setMenuItems: (menuItems: MenuItem[]) => void;
-};
+const ItemList = () => {
+  const { menuItems, removeMenuItem } = useMenu();
+  const [isItemForm, setItemForm] = useState<boolean | null>(null);
 
-const ItemList = ({ menuItems, setMenuItems }: Props) => {
-  const removeItem = (id: string) => {
-    const updatedItems = menuItems.filter((item) => item.id !== id);
-    setMenuItems(updatedItems);
-    saveDataToLocalStorage(updatedItems);
+  const topLevelItems = menuItems.filter((item) => !item.parentId);
+
+  const addItem = () => {
+    setItemForm(true);
   };
 
-  const items = menuItems
-    .map((item) => {
-      return <Item item={item} key={item.id} removeItem={removeItem} />;
-    })
-    .reverse();
+  const hideForm = () => setItemForm(false);
 
-  if (menuItems.length === 0) {
+  const itemForm = () => {
+    if (isItemForm) {
+      return <AddItem hideForm={hideForm} />;
+    }
+    return null;
+  };
+
+  if (topLevelItems.length === 0) {
     return null;
   }
 
-  return <div>{items}</div>;
+  return (
+    <div
+      className="m-3 
+      rounded-md 
+      border-[1px]
+    "
+    >
+      {topLevelItems.map((item, index) => (
+        <Item
+          item={item}
+          key={item.id}
+          removeItem={removeMenuItem}
+          itemIndex={index}
+        />
+      ))}
+
+      {isItemForm ? (
+        itemForm()
+      ) : (
+        <div className="px-6 py-5 rounded-b-md border-[1px] border-t-0">
+          <Button onClick={addItem}>Dodaj pozycję menu</Button>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ItemList;

@@ -1,10 +1,10 @@
 import Button from '../Button/Button';
 
-const EmptyList = () => {
-  const handleAdd = () => {
-    console.log('click');
-  };
+type Props = {
+  addItem: () => void;
+};
 
+const EmptyList = ({ addItem }: Props) => {
   return (
     <div className="rounded-md bg-gray-50 text-center border border-gray-200 m-3 px-4 py-6">
       <div className="mb-6">
@@ -15,7 +15,7 @@ const EmptyList = () => {
           W tym menu nie ma jeszcze żadnych linków
         </p>
       </div>
-      <Button variant="withIcon" onClick={handleAdd}>
+      <Button variant="withIcon" onClick={addItem}>
         Dodaj pozycję menu
       </Button>
     </div>
