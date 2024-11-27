@@ -1,7 +1,7 @@
 'use client';
 
+import { useMenu } from '@/context/menuContext';
 import { MenuItem } from '@/types/MenuItem';
-import { saveDataToLocalStorage } from '@/utils/ManipulateLocalStorage';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -20,11 +20,15 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-type Props = {
-  setMenuItems: React.Dispatch<React.SetStateAction<MenuItem[]>>;
-};
+const AddItem = ({
+  hideForm,
+  parentId,
+}: {
+  hideForm?: () => void;
+  parentId?: string;
+}) => {
+  const { addMenuItem } = useMenu();
 
-const AddItem = ({ setMenuItems }: Props) => {
   const {
     register,
     handleSubmit,
@@ -43,6 +47,7 @@ const AddItem = ({ setMenuItems }: Props) => {
   };
 
   const handleReset = () => {
+    hideForm?.();
     reset({
       name: '',
       link: '',
@@ -53,13 +58,11 @@ const AddItem = ({ setMenuItems }: Props) => {
     const newItem: MenuItem = {
       ...data,
       id: uuidv4(),
+      parentId: parentId ? parentId : undefined,
     };
 
-    setMenuItems((prevItems: MenuItem[]) => {
-      const updatedItems = [...prevItems, newItem];
-      saveDataToLocalStorage(updatedItems);
-      return updatedItems;
-    });
+    addMenuItem(newItem);
+    hideForm?.();
 
     reset({
       name: '',
