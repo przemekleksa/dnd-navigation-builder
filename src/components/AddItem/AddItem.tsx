@@ -1,13 +1,9 @@
 'use client';
 
 import { MenuItem } from '@/types/MenuItem';
-import {
-  getDataFromLocalStorage,
-  saveDataToLocalStorage,
-} from '@/utils/ManipulateLocalStorage';
+import { saveDataToLocalStorage } from '@/utils/ManipulateLocalStorage';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
@@ -24,16 +20,11 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const AddItem = () => {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+type Props = {
+  setMenuItems: React.Dispatch<React.SetStateAction<MenuItem[]>>;
+};
 
-  useEffect(() => {
-    const lsData = getDataFromLocalStorage();
-    if (lsData) {
-      setMenuItems(JSON.parse(lsData));
-    }
-  }, []);
-
+const AddItem = ({ setMenuItems }: Props) => {
   const {
     register,
     handleSubmit,
@@ -64,7 +55,7 @@ const AddItem = () => {
       id: uuidv4(),
     };
 
-    setMenuItems((prevItems) => {
+    setMenuItems((prevItems: MenuItem[]) => {
       const updatedItems = [...prevItems, newItem];
       saveDataToLocalStorage(updatedItems);
       return updatedItems;
@@ -77,7 +68,7 @@ const AddItem = () => {
   };
 
   return (
-    <div className="rounded-md text-center border border-gray-200 m-3 px-6 py-4">
+    <div className="rounded-md text-center border border-gray-200 m-3 px-6 py-4 bg-components-bg-primary">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-row">
         <div className="flex-1">
           <div className="flex flex-col space-y-1.5 items-start">
