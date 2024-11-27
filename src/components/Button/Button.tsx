@@ -30,7 +30,7 @@ const Button = ({ variant, children, onClick, type = 'button' }: Props) => {
     return (
       <button
         type={type}
-        className="px-3.5 py-2.5  rounded-md text-sm font-medium text-center border-[1px] font-semibold border-button-cta-border text-button-cta-color hover:bg-button-cta-color hover:text-stone-50 hover:border-slate-900"
+        className="px-3.5 py-2.5  rounded-md text-sm font-medium text-center border-[1px] font-semibold border-button-cta-border text-button-cta-color hover:bg-button-cta-color hover:text-stone-50 hover:border-slate-900 bg-components-bg-primary"
         onClick={onClick}
       >
         {children}
@@ -41,7 +41,7 @@ const Button = ({ variant, children, onClick, type = 'button' }: Props) => {
   return (
     <button
       type={type}
-      className="px-3.5 py-2.5 rounded-md text-sm font-medium text-center border-[1px] font-semibold hover:bg-gray-200"
+      className="px-3.5 py-2.5 rounded-md text-sm font-medium text-center border-[1px] font-semibold hover:bg-gray-200 bg-components-bg-primary"
       onClick={onClick}
     >
       {children}

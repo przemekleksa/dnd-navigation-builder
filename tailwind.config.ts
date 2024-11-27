@@ -9,6 +9,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        components: {
+          bg: {
+            primary: '#ffffff',
+          },
+        },
         primary: {
           900: '#101828',
         },
