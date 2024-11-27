@@ -1,8 +1,13 @@
 'use client';
 
+import { MenuItem } from '@/types/MenuItem';
+import {
+  getDataFromLocalStorage,
+  saveDataToLocalStorage,
+} from '@/utils/ManipulateLocalStorage';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
@@ -19,10 +24,15 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-type MenuItem = FormData & { id: string };
-
 const AddItem = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    const lsData = getDataFromLocalStorage();
+    if (lsData) {
+      setMenuItems(JSON.parse(lsData));
+    }
+  }, []);
 
   const {
     register,
@@ -53,7 +63,12 @@ const AddItem = () => {
       ...data,
       id: uuidv4(),
     };
-    setMenuItems((prevItems) => [...prevItems, newItem]);
+
+    setMenuItems((prevItems) => {
+      const updatedItems = [...prevItems, newItem];
+      saveDataToLocalStorage(updatedItems);
+      return updatedItems;
+    });
 
     reset({
       name: '',
