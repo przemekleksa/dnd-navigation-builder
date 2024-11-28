@@ -12,6 +12,7 @@ type Props = {
 
 const Item = ({ item, removeItem, itemIndex }: Props) => {
   const [isSubitemForm, setIsSubitemForm] = useState<boolean | null>(null);
+  const [openEditItemForm, setOpenEditItemForm] = useState<string | null>(null);
   const { menuItems } = useMenu();
   const { id: parentId } = item;
 
@@ -30,6 +31,18 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
     return null;
   };
 
+  const editItemId = (id: string) => {
+    setOpenEditItemForm(id);
+  };
+
+  const editItemForm = (id: string) => {
+    if (openEditItemForm) {
+      return (
+        <AddItem hideForm={() => setOpenEditItemForm(null)} editItemId={id} />
+      );
+    }
+  };
+
   return (
     <div>
       <Titlebar
@@ -37,8 +50,10 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
         removeItem={removeItem}
         addSubItem={addSubItem}
         itemIndex={itemIndex}
+        editItemId={editItemId}
       />
       {subItemForm()}
+      {editItemForm(item.id)}
       {childItems.length > 0 && (
         <div className="pl-16 ">
           {childItems.map((child) => (

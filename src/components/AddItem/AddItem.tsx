@@ -23,11 +23,25 @@ type FormData = z.infer<typeof schema>;
 const AddItem = ({
   hideForm,
   parentId,
+  editItemId: editMode,
 }: {
   hideForm?: () => void;
   parentId?: string;
+  editItemId?: string;
 }) => {
-  const { addMenuItem } = useMenu();
+  const { addMenuItem, updateMenuItem, menuItems } = useMenu();
+
+  const editedItem = menuItems.find((item) => item.id === editMode);
+
+  const defaultValues = editedItem
+    ? {
+        name: editedItem.name,
+        link: editedItem.link,
+      }
+    : {
+        name: '',
+        link: '',
+      };
 
   const {
     register,
@@ -36,38 +50,43 @@ const AddItem = ({
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      name: '',
-      link: '',
-    },
+    defaultValues,
   });
-
-  const handleRemove = () => {
-    console.log('remove');
-  };
 
   const handleReset = () => {
     hideForm?.();
-    reset({
-      name: '',
-      link: '',
-    });
+    reset(defaultValues);
+  };
+
+  const clearForm = () => {
+    reset(defaultValues);
   };
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    const newItem: MenuItem = {
-      ...data,
-      id: uuidv4(),
-      parentId: parentId ? parentId : undefined,
-    };
+    if (editMode && editedItem) {
+      const updatedItem: MenuItem = {
+        ...editedItem,
+        ...data,
+      };
 
-    addMenuItem(newItem);
+      updateMenuItem(updatedItem);
+    } else {
+      const parentPath = parentId
+        ? menuItems.find((item) => item.id === parentId)?.path || []
+        : [];
+
+      const newItem: MenuItem = {
+        ...data,
+        id: uuidv4(),
+        parentId: parentId || undefined,
+        path: [...parentPath, parentId].filter(Boolean),
+      };
+
+      addMenuItem(newItem);
+    }
+
     hideForm?.();
-
-    reset({
-      name: '',
-      link: '',
-    });
+    reset(defaultValues);
   };
 
   return (
@@ -111,15 +130,16 @@ const AddItem = ({
           <div className="flex my-5 gap-2">
             <Button onClick={handleReset}>Anuluj</Button>
             <Button variant="cta" type="submit">
-              Dodaj
+              {editMode ? 'Zapisz' : 'Dodaj'}
             </Button>
           </div>
         </div>
+
         <div className="ml-[26px] mr-[10px]">
           <button
             type="button"
-            className=" text-gray-500 hover:text-button-cta-color"
-            onClick={handleRemove}
+            className="text-gray-500 hover:text-button-cta-color"
+            onClick={clearForm}
           >
             <TrashIcon className="h-6 w-6" />
           </button>

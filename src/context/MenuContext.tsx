@@ -1,11 +1,11 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
 import { MenuItem } from '@/types/MenuItem';
 import {
   getDataFromLocalStorage,
   saveDataToLocalStorage,
 } from '@/utils/ManipulateLocalStorage';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type MenuContextType = {
   menuItems: MenuItem[];
@@ -36,7 +36,19 @@ export const MenuProvider = ({ children }: { children: React.ReactNode }) => {
 
   const removeMenuItem = (id: string) => {
     setMenuItems((prevItems) => {
-      const updatedItems = prevItems.filter((item) => item.id !== id);
+      const removeWithChildren = (
+        items: MenuItem[],
+        targetId: string
+      ): MenuItem[] => {
+        return items.filter((item) => {
+          if (item.id === targetId || item.path.includes(targetId)) {
+            return false;
+          }
+          return true;
+        });
+      };
+
+      const updatedItems = removeWithChildren(prevItems, id);
       saveDataToLocalStorage(updatedItems);
       return updatedItems;
     });

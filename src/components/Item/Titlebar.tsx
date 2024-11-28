@@ -7,9 +7,16 @@ type Props = {
   removeItem: (id: string) => void;
   addSubItem: () => void;
   itemIndex?: number;
+  editItemId: (id: string) => void;
 };
 
-const Titlebar = ({ item, removeItem, addSubItem, itemIndex }: Props) => {
+const Titlebar = ({
+  item,
+  removeItem,
+  addSubItem,
+  itemIndex,
+  editItemId,
+}: Props) => {
   const { name, link, id, parentId } = item;
 
   const mainItemClass = `rounded-t-md border-t-0 border-l-0 border-r-0`;
@@ -25,14 +32,17 @@ const Titlebar = ({ item, removeItem, addSubItem, itemIndex }: Props) => {
       <div className="flex items-center">
         <ArrowsPointingOutIcon className="h-6 w-6 mr-3 rotate-45" />
         <div className="flex gap-1.5 flex-col">
-          <h3 className="font-semibold font-sm">{name ? name : 'Promocje'}</h3>
-          <p className="font-sm font-normal text-tertiary-600">
-            {link ? link : `https://www.google.com`}
-          </p>
+          <h3 className="font-semibold font-sm">{name}</h3>
+          <p className="font-sm font-normal text-tertiary-600">{link}</p>
         </div>
       </div>
 
-      <MenuActions id={id} removeItem={removeItem} addSubItem={addSubItem} />
+      <MenuActions
+        id={id}
+        removeItem={removeItem}
+        addSubItem={addSubItem}
+        editItemId={editItemId}
+      />
     </div>
   );
 };
