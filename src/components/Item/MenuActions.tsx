@@ -2,11 +2,21 @@ type Props = {
   id: string;
   removeItem: (id: string) => void;
   addSubItem: () => void;
+  editItemId: (id: string) => void;
 };
 
-export const MenuActions = ({ id, removeItem, addSubItem }: Props) => {
+export const MenuActions = ({
+  id,
+  removeItem,
+  addSubItem,
+  editItemId,
+}: Props) => {
   const handleRemove = () => {
     removeItem(id);
+  };
+
+  const handleEdit = () => {
+    editItemId(id);
   };
 
   return (
@@ -17,7 +27,10 @@ export const MenuActions = ({ id, removeItem, addSubItem }: Props) => {
       >
         Usuń
       </button>
-      <button className="px-4 py-2.5 text-sm font-medium text-center border-r-[1px] font-semibold hover:bg-gray-200 ">
+      <button
+        className="px-4 py-2.5 text-sm font-medium text-center border-r-[1px] font-semibold hover:bg-gray-200 "
+        onClick={handleEdit}
+      >
         Edytuj
       </button>
       <button
