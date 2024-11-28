@@ -1,4 +1,5 @@
 import { useMenu } from '@/context/menuContext';
+import { MenuItem } from '@/types/MenuItem';
 import { useState } from 'react';
 import AddItem from '../AddItem/AddItem';
 import Button from '../Button/Button';
@@ -23,9 +24,23 @@ const ItemList = () => {
     return null;
   };
 
-  if (topLevelItems.length === 0) {
-    return null;
-  }
+  const renderItems = (items: MenuItem[], level: number = 0) => {
+    return items.map((item, index) => {
+      const childItems = menuItems.filter(
+        (child) => child.parentId === item.id
+      );
+
+      return (
+        <div
+          key={item.id}
+          style={{ marginLeft: `${level > 0 && level * 64}px` }}
+        >
+          <Item item={item} removeItem={removeMenuItem} itemIndex={index} />
+          {childItems.length > 0 && renderItems(childItems, level + 1)}
+        </div>
+      );
+    });
+  };
 
   return (
     <div
@@ -34,14 +49,7 @@ const ItemList = () => {
       border-[1px]
     "
     >
-      {topLevelItems.map((item, index) => (
-        <Item
-          item={item}
-          key={item.id}
-          removeItem={removeMenuItem}
-          itemIndex={index}
-        />
-      ))}
+      {renderItems(topLevelItems)}
 
       {isItemForm ? (
         itemForm()

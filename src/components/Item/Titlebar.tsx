@@ -19,11 +19,11 @@ const Titlebar = ({
 }: Props) => {
   const { name, link, id, parentId } = item;
 
-  const mainItemClass = `rounded-t-md border-t-0 border-l-0 border-r-0`;
+  const mainItemClass = `rounded-t-md !border-t-0 border-l-0 border-r-0`;
 
   const borderClass = parentId
-    ? 'border-l-[1px] rounded-bl-md border-b-[1px] border-r-[1px] border-t-[1px]'
-    : `border border-gray-200 ${itemIndex === 0 && mainItemClass}`;
+    ? 'border-l-[1px] rounded-bl-md border-b-[1px] border-r-[1px] '
+    : `border-t-[1px] border-b-[1px] border-gray-200 ${itemIndex === 0 && mainItemClass}`;
 
   return (
     <div

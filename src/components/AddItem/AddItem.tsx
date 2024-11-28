@@ -78,7 +78,7 @@ const AddItem = ({
       const newItem: MenuItem = {
         ...data,
         id: uuidv4(),
-        parentId: parentId || undefined,
+        parentId: parentId || '',
         path: [...parentPath, parentId].filter(Boolean),
       };
 
