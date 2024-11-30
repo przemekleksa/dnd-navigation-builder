@@ -1,5 +1,6 @@
-import { useMenu } from '@/context/menuContext';
 import { MenuItem } from '@/types/MenuItem';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 import AddItem from '../AddItem/AddItem';
 import Titlebar from './Titlebar';
@@ -13,10 +14,7 @@ type Props = {
 const Item = ({ item, removeItem, itemIndex }: Props) => {
   const [isSubitemForm, setIsSubitemForm] = useState<boolean | null>(null);
   const [openEditItemForm, setOpenEditItemForm] = useState<string | null>(null);
-  const { menuItems } = useMenu();
   const { id: parentId } = item;
-
-  const childItems = menuItems.filter((child) => child.parentId === parentId);
 
   const addSubItem = () => {
     setIsSubitemForm(true);
@@ -43,8 +41,30 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
     }
   };
 
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: item.id,
+    });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
+
+  const customListeners = {
+    ...listeners,
+    onPointerDown: (e: React.PointerEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-no-drag]')) {
+        e.preventDefault();
+        return;
+      }
+      listeners?.onPointerDown?.(e);
+    },
+  };
+
   return (
-    <div>
+    <div ref={setNodeRef} style={style} {...attributes} {...customListeners}>
       <Titlebar
         item={item}
         removeItem={removeItem}
@@ -54,13 +74,6 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
       />
       {subItemForm()}
       {editItemForm(item.id)}
-      {childItems.length > 0 && (
-        <div className="pl-16 ">
-          {childItems.map((child) => (
-            <Item key={child.id} item={child} removeItem={removeItem} />
-          ))}
-        </div>
-      )}
     </div>
   );
 };

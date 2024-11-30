@@ -12,6 +12,7 @@ type MenuContextType = {
   addMenuItem: (newItem: MenuItem) => void;
   removeMenuItem: (id: string) => void;
   updateMenuItem: (updatedItem: MenuItem) => void;
+  setMenuItems: React.Dispatch<React.SetStateAction<MenuItem[]>>;
 };
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
@@ -36,20 +37,31 @@ export const MenuProvider = ({ children }: { children: React.ReactNode }) => {
 
   const removeMenuItem = (id: string) => {
     setMenuItems((prevItems) => {
-      const removeWithChildren = (
+      const getChildrenIds = (
         items: MenuItem[],
-        targetId: string
-      ): MenuItem[] => {
-        return items.filter((item) => {
-          if (item.id === targetId || item.path.includes(targetId)) {
-            return false;
-          }
-          return true;
-        });
+        parentId: string
+      ): string[] => {
+        const directChildren = items.filter(
+          (item) => item.parentId === parentId
+        );
+        return directChildren.reduce(
+          (acc, child) => [
+            ...acc,
+            child.id,
+            ...getChildrenIds(items, child.id),
+          ],
+          [] as string[]
+        );
       };
 
-      const updatedItems = removeWithChildren(prevItems, id);
+      const idsToRemove = [id, ...getChildrenIds(prevItems, id)];
+
+      const updatedItems = prevItems.filter(
+        (item) => !idsToRemove.includes(item.id)
+      );
+
       saveDataToLocalStorage(updatedItems);
+
       return updatedItems;
     });
   };
@@ -66,7 +78,13 @@ export const MenuProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <MenuContext.Provider
-      value={{ menuItems, addMenuItem, removeMenuItem, updateMenuItem }}
+      value={{
+        menuItems,
+        addMenuItem,
+        removeMenuItem,
+        updateMenuItem,
+        setMenuItems,
+      }}
     >
       {children}
     </MenuContext.Provider>
