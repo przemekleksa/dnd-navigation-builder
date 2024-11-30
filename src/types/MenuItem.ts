@@ -6,5 +6,6 @@ type FormData = z.infer<typeof newItemSchema>;
 export type MenuItem = FormData & {
   id: string;
   parentId?: string;
-  path: (string | undefined)[];
+  level: number;
+  column: number;
 };

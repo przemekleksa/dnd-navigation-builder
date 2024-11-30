@@ -1,4 +1,6 @@
 import { MenuItem } from '@/types/MenuItem';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 import AddItem from '../AddItem/AddItem';
 import Titlebar from './Titlebar';
@@ -39,8 +41,30 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
     }
   };
 
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: item.id,
+    });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
+
+  const customListeners = {
+    ...listeners,
+    onPointerDown: (e: React.PointerEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-no-drag]')) {
+        e.preventDefault();
+        return;
+      }
+      listeners?.onPointerDown?.(e);
+    },
+  };
+
   return (
-    <div>
+    <div ref={setNodeRef} style={style} {...attributes} {...customListeners}>
       <Titlebar
         item={item}
         removeItem={removeItem}

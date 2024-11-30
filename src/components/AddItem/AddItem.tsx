@@ -71,15 +71,24 @@ const AddItem = ({
 
       updateMenuItem(updatedItem);
     } else {
-      const parentPath = parentId
-        ? menuItems.find((item) => item.id === parentId)?.path || []
-        : [];
+      const parentItem = parentId
+        ? menuItems.find((item) => item.id === parentId)
+        : undefined;
+
+      const parentColumn = parentItem ? parentItem.column : undefined;
+      const parentLevel = parentItem ? parentItem.level : 0;
+
+      const maxColumn = Math.max(
+        0,
+        ...menuItems.filter((item) => !item.parentId).map((item) => item.column)
+      );
 
       const newItem: MenuItem = {
         ...data,
         id: uuidv4(),
         parentId: parentId || '',
-        path: [...parentPath, parentId].filter(Boolean),
+        level: parentLevel + 1,
+        column: parentId ? (parentColumn ?? 0) : maxColumn + 1,
       };
 
       addMenuItem(newItem);
@@ -91,7 +100,11 @@ const AddItem = ({
 
   return (
     <div className="rounded-md text-center border border-gray-200 m-3 px-6 py-4 bg-components-bg-primary">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-row">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-row"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
         <div className="flex-1">
           <div className="flex flex-col space-y-1.5 items-start">
             <label
