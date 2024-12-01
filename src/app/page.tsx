@@ -5,9 +5,11 @@ import Button from '@/components/Button/Button';
 import { data } from '@/components/data/data';
 import EmptyList from '@/components/EmptyList/EmptyList';
 import ItemList from '@/components/ItemList/ItemList';
-import { useMenu } from '@/context/menuContext';
+import { useMenu } from '@/context/MenuContext';
 import { saveDataToLocalStorage } from '@/utils/ManipulateLocalStorage';
 import { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const { menuItems, setMenuItems } = useMenu();
@@ -31,6 +33,7 @@ export default function Home() {
         <EmptyList addItem={addItem} />
       )}
       {showAddItem && menuItems.length < 1 && <AddItem />}
+      <ToastContainer />
       <ItemList />
     </div>
   );

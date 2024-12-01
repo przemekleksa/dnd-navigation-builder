@@ -25,27 +25,11 @@ const Titlebar = ({
     ? 'border-l-[1px] rounded-bl-md border-b-[1px] border-r-[1px] '
     : `border-t-[1px] border-b-[1px] border-gray-200 ${itemIndex === 0 && mainItemClass}`;
 
-  // const { attributes, listeners, setNodeRef, transform, transition } =
-  //   useSortable({
-  //     id: item.id,
-  //   });
-
-  // const style = {
-  //   transform: CSS.Translate.toString(transform),
-  //   transition,
-  // };
-
   return (
     <div
       className={`justify-between px-6 py-4 flex items-center bg-components-bg-primary ${borderClass}`}
     >
-      <div
-        className="flex items-center"
-        // ref={setNodeRef}
-        // style={style}
-        // {...attributes}
-        // {...listeners}
-      >
+      <div className="flex items-center">
         <ArrowsPointingOutIcon className="h-6 w-6 mr-3 rotate-45" />
         <div className="flex gap-1.5 flex-col">
           <h3 className="font-semibold font-sm">{name}</h3>
@@ -58,7 +42,6 @@ const Titlebar = ({
         removeItem={removeItem}
         addSubItem={addSubItem}
         editItemId={editItemId}
-        // data-no-drag
       />
     </div>
   );
