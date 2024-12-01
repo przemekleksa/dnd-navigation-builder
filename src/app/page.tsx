@@ -7,7 +7,7 @@ import EmptyList from '@/components/EmptyList/EmptyList';
 import ItemList from '@/components/ItemList/ItemList';
 import { useMenu } from '@/context/MenuContext';
 import { saveDataToLocalStorage } from '@/utils/ManipulateLocalStorage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,10 +21,18 @@ export default function Home() {
     setShowAddItem(true);
   };
 
+  const backToEmptyList = () => {
+    setShowAddItem(false);
+  };
+
   const resetData = () => {
     saveDataToLocalStorage(data);
     setMenuItems(data);
   };
+
+  useEffect(() => {
+    if (menuItems.length === 0) setShowAddItem(false);
+  }, [menuItems]);
 
   return (
     <div>
@@ -32,7 +40,9 @@ export default function Home() {
       {!showAddItem && menuItems.length === 0 && (
         <EmptyList addItem={addItem} />
       )}
-      {showAddItem && menuItems.length < 1 && <AddItem />}
+      {showAddItem && menuItems.length < 1 && (
+        <AddItem backToEmptyList={backToEmptyList} />
+      )}
       <ToastContainer />
       <ItemList />
     </div>
