@@ -1,10 +1,11 @@
 'use client';
 
-import { useMenu } from '@/context/menuContext';
+import { useMenu } from '@/context/MenuContext';
 import { MenuItem } from '@/types/MenuItem';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import Button from '../Button/Button';
@@ -30,6 +31,7 @@ const AddItem = ({
   editItemId?: string;
 }) => {
   const { addMenuItem, updateMenuItem, menuItems } = useMenu();
+  const notify = () => toast('Wow so easy!');
 
   const editedItem = menuItems.find((item) => item.id === editMode);
 
@@ -60,6 +62,7 @@ const AddItem = ({
 
   const clearForm = () => {
     reset(defaultValues);
+    toast.success('Forma została zresetowana');
   };
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
@@ -70,6 +73,7 @@ const AddItem = ({
       };
 
       updateMenuItem(updatedItem);
+      toast.success('Pozycja została zaktualizowana');
     } else {
       const parentItem = parentId
         ? menuItems.find((item) => item.id === parentId)
@@ -92,6 +96,7 @@ const AddItem = ({
       };
 
       addMenuItem(newItem);
+      toast.success('Pozycja dodana');
     }
 
     hideForm?.();

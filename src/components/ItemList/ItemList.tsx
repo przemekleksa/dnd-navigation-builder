@@ -1,4 +1,4 @@
-import { useMenu } from '@/context/menuContext';
+import { useMenu } from '@/context/MenuContext';
 import { MenuItem } from '@/types/MenuItem';
 import { saveDataToLocalStorage } from '@/utils/ManipulateLocalStorage';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
@@ -7,6 +7,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import AddItem from '../AddItem/AddItem';
 import Button from '../Button/Button';
 import Item from '../Item/Item';
@@ -61,14 +62,11 @@ const ItemList = () => {
       console.log('Active or over item not found!');
       return;
     }
-
-    // Zapobiegamy przypisaniu własnego ID jako parentId
     if (activeItem.id === overItem.id) {
       console.log('Cannot assign self as parent!');
       return;
     }
 
-    // Sprawdzamy, czy element docelowy nie jest potomkiem przeciąganego elementu
     const isDescendant = (parentId: string, childId: string): boolean => {
       let current = menuItems.find((item) => item.id === childId);
 
@@ -84,6 +82,7 @@ const ItemList = () => {
 
     if (isDescendant(activeItem.id, overItem.id)) {
       console.log('Cannot move to a descendant!');
+      toast.error('Nie można przesunąć do potomka');
       return;
     }
 
@@ -109,6 +108,7 @@ const ItemList = () => {
 
     setMenuItems(updatedItems);
     saveDataToLocalStorage(updatedItems);
+    toast.info('Pozycja przesunięta');
   };
 
   return (
