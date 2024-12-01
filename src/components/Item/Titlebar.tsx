@@ -28,9 +28,13 @@ const Titlebar = ({
   return (
     <div
       className={`justify-between px-6 py-4 flex items-center bg-components-bg-primary ${borderClass}`}
+      aria-label={`Menu item: ${name}`}
     >
       <div className="flex items-center">
-        <ArrowsPointingOutIcon className="h-6 w-6 mr-3 rotate-45" />
+        <ArrowsPointingOutIcon
+          className="h-6 w-6 mr-3 rotate-45"
+          aria-hidden="true"
+        />
         <div className="flex gap-1.5 flex-col">
           <h3 className="font-semibold font-sm" data-testid="item-name">
             {name}

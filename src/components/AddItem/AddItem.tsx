@@ -11,12 +11,18 @@ import { z } from 'zod';
 import Button from '../Button/Button';
 import SearchInput from './SearchInput';
 
+const validationMessages = {
+  nameRequired: 'Nazwa jest wymagana',
+  nameMax: 'Maksymalnie 50 znaków',
+  invalidURL: 'Podaj prawidłowy URL',
+};
+
 const schema = z.object({
   name: z
     .string()
-    .min(1, 'Nazwa jest wymagana')
-    .max(50, 'Maksymalnie 50 znaków'),
-  link: z.string().url('Podaj prawidłowy URL'),
+    .min(1, validationMessages.nameRequired)
+    .max(50, validationMessages.nameMax),
+  link: z.string().url(validationMessages.invalidURL),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -35,6 +41,7 @@ const AddItem = ({
   backToEmptyList,
 }: Props) => {
   const { addMenuItem, updateMenuItem, menuItems } = useMenu();
+  const buttonLabel = editMode ? 'Zapisz' : 'Dodaj';
 
   const editedItem = menuItems.find((item) => item.id === editMode);
 
@@ -152,11 +159,20 @@ const AddItem = ({
             )}
           </div>
           <div className="flex my-5 gap-2">
-            <Button onClick={handleReset} testId="cancel-submit-button">
+            <Button
+              onClick={handleReset}
+              testId="cancel-submit-button"
+              aria-label="Anuluj dodawanie pozycji"
+            >
               Anuluj
             </Button>
-            <Button variant="cta" type="submit" testId="submit-button">
-              {editMode ? 'Zapisz' : 'Dodaj'}
+            <Button
+              variant="cta"
+              type="submit"
+              testId="submit-button"
+              aria-label={`${editMode ? 'Zapisz zmiany' : 'Dodaj pozycję'}`}
+            >
+              {buttonLabel}
             </Button>
           </div>
         </div>
@@ -167,6 +183,7 @@ const AddItem = ({
             className="text-gray-500 hover:text-button-cta-color"
             onClick={clearForm}
             data-testid="form-reset"
+            aria-label="Zresetuj formularz"
           >
             <TrashIcon className="h-6 w-6" />
           </button>

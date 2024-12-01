@@ -6,7 +6,6 @@ import {
   saveDataToLocalStorage,
 } from '@/utils/ManipulateLocalStorage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 type MenuContextType = {
   menuItems: MenuItem[];
