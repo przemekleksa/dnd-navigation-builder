@@ -111,13 +111,12 @@ const ItemList = () => {
     toast.info('Pozycja przesunięta');
   };
 
+  const noItemsNoBorder = menuItems.length > 0 && 'border-[1px]';
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div
-        className="m-3 
-      rounded-md 
-      border-[1px]
-    "
+        className={`m-3  rounded-md ${noItemsNoBorder}`}
         onPointerDown={(e) => isItemForm && e.stopPropagation()}
       >
         <SortableContext
@@ -126,14 +125,15 @@ const ItemList = () => {
         >
           {renderItems(topLevelItems)}
         </SortableContext>
+
+        {isItemForm
+          ? itemForm()
+          : menuItems.length > 0 && (
+              <div className="px-6 py-5 rounded-b-md border-[1px] border-t-0">
+                <Button onClick={addItem}>Dodaj pozycję menu</Button>
+              </div>
+            )}
       </div>
-      {isItemForm ? (
-        itemForm()
-      ) : (
-        <div className="px-6 py-5 rounded-b-md border-[1px] border-t-0">
-          <Button onClick={addItem}>Dodaj pozycję menu</Button>
-        </div>
-      )}
     </DndContext>
   );
 };

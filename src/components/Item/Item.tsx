@@ -16,10 +16,6 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
   const [openEditItemForm, setOpenEditItemForm] = useState<string | null>(null);
   const { id: parentId } = item;
 
-  const addSubItem = () => {
-    setIsSubitemForm(true);
-  };
-
   const hideForm = () => setIsSubitemForm(false);
 
   const subItemForm = () => {
@@ -68,7 +64,7 @@ const Item = ({ item, removeItem, itemIndex }: Props) => {
       <Titlebar
         item={item}
         removeItem={removeItem}
-        addSubItem={addSubItem}
+        addSubItem={() => setIsSubitemForm(true)}
         itemIndex={itemIndex}
         editItemId={editItemId}
       />
