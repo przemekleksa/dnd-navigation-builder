@@ -111,12 +111,10 @@ const ItemList = () => {
     toast.info('Pozycja przesunięta');
   };
 
-  const noItemsNoBorder = menuItems.length > 0 && 'border-[1px]';
-
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div
-        className={`m-3  rounded-md ${noItemsNoBorder}`}
+        className={`m-3  rounded-md`}
         onPointerDown={(e) => isItemForm && e.stopPropagation()}
       >
         <SortableContext
