@@ -21,17 +21,20 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+type Props = {
+  hideForm?: () => void;
+  parentId?: string;
+  editItemId?: string;
+  backToEmptyList?: () => void;
+};
+
 const AddItem = ({
   hideForm,
   parentId,
   editItemId: editMode,
-}: {
-  hideForm?: () => void;
-  parentId?: string;
-  editItemId?: string;
-}) => {
+  backToEmptyList,
+}: Props) => {
   const { addMenuItem, updateMenuItem, menuItems } = useMenu();
-  const notify = () => toast('Wow so easy!');
 
   const editedItem = menuItems.find((item) => item.id === editMode);
 
@@ -57,6 +60,9 @@ const AddItem = ({
 
   const handleReset = () => {
     hideForm?.();
+    if (backToEmptyList) {
+      backToEmptyList();
+    }
     reset(defaultValues);
   };
 
@@ -146,8 +152,10 @@ const AddItem = ({
             )}
           </div>
           <div className="flex my-5 gap-2">
-            <Button onClick={handleReset}>Anuluj</Button>
-            <Button variant="cta" type="submit">
+            <Button onClick={handleReset} testId="cancel-submit-button">
+              Anuluj
+            </Button>
+            <Button variant="cta" type="submit" testId="submit-button">
               {editMode ? 'Zapisz' : 'Dodaj'}
             </Button>
           </div>
@@ -158,6 +166,7 @@ const AddItem = ({
             type="button"
             className="text-gray-500 hover:text-button-cta-color"
             onClick={clearForm}
+            data-testid="form-reset"
           >
             <TrashIcon className="h-6 w-6" />
           </button>

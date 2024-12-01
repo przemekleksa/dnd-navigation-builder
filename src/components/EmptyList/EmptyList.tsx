@@ -15,7 +15,11 @@ const EmptyList = ({ addItem }: Props) => {
           W tym menu nie ma jeszcze żadnych linków
         </p>
       </div>
-      <Button variant="withIcon" onClick={addItem}>
+      <Button
+        variant="withIcon"
+        onClick={addItem}
+        testId="add-menu-item-button"
+      >
         Dodaj pozycję menu
       </Button>
     </div>

@@ -32,8 +32,15 @@ const Titlebar = ({
       <div className="flex items-center">
         <ArrowsPointingOutIcon className="h-6 w-6 mr-3 rotate-45" />
         <div className="flex gap-1.5 flex-col">
-          <h3 className="font-semibold font-sm">{name}</h3>
-          <p className="font-sm font-normal text-tertiary-600">{link}</p>
+          <h3 className="font-semibold font-sm" data-testid="item-name">
+            {name}
+          </h3>
+          <p
+            className="font-sm font-normal text-tertiary-600"
+            data-testid="item-link"
+          >
+            {link}
+          </p>
         </div>
       </div>
 
